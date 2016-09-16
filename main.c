@@ -83,10 +83,11 @@ int main(int argc, char * argv[])
 
 void genetic_algorithm(int start, int final, float time, struct pair * nodes[], int num_nodes, struct timeval time1)
 {
-  int i, j, org_size, population_size = 10;
+  int i, j, org_size, population_size = 100;
   struct organism * population[population_size];
   struct timeval time2;
-  
+
+  // create the population
   create_population(population, population_size, nodes, num_nodes);
 
   /* check population was created correctly 
@@ -101,12 +102,14 @@ void genetic_algorithm(int start, int final, float time, struct pair * nodes[], 
   }
   */
 
+  // fitness function over the population
   for(i = 0; i < population_size; i++)
   {
     fitness_function(population[i], start, final);
     printf("organism: %d fitness: %lf\n", i, population[i]->fitness);
   }
-  
+
+  // partially reorder the population grab best results remove the worst
 }
 
 void create_population(struct organism * pop[], int pop_size, struct pair * nodes[], int num_nodes)
