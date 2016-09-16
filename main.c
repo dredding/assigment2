@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 struct pair
 {
@@ -13,10 +14,12 @@ struct organism
 {
   struct pair genes[30];
   int size;
+  double fitness;
 };
 
 void genetic_algorithm(int start, int final, float time, struct pair * nodes[], int num_nodes, struct timeval time1);
 void create_population(struct organism * pop[], int pop_size, struct pair * nodes[], int num_nodes);
+double fitness_function(struct organism * indiv, int start, int final);
 
 int main(int argc, char * argv[])
 {
@@ -86,7 +89,7 @@ void genetic_algorithm(int start, int final, float time, struct pair * nodes[], 
   
   create_population(population, population_size, nodes, num_nodes);
 
-  /*
+  /* check population was created correctly 
   for(i = 0; i < population_size; i++)
   {
     org_size = population[i]->size;
@@ -97,6 +100,13 @@ void genetic_algorithm(int start, int final, float time, struct pair * nodes[], 
     }
   }
   */
+
+  for(i = 0; i < population_size; i++)
+  {
+    fitness_function(population[i], start, final);
+    printf("organism: %d fitness: %lf\n", i, population[i]->fitness);
+  }
+  
 }
 
 void create_population(struct organism * pop[], int pop_size, struct pair * nodes[], int num_nodes)
@@ -120,4 +130,40 @@ void create_population(struct organism * pop[], int pop_size, struct pair * node
     }
     pop[i] = indiv;
   }
+}
+
+double fitness_function(struct organism * indiv, int start, int final)
+{
+  int i, j, size = indiv->size;
+  double total_val = start, fitness;
+
+  for(i = 0; i < size; i++)
+  {
+    switch(indiv->genes[i].op)
+    {
+    case '+':
+      total_val = total_val + indiv->genes[i].val;
+      break;
+    case '-':
+      total_val = total_val - indiv->genes[i].val;
+      break;
+    case '/':
+      total_val = total_val / indiv->genes[i].val;
+      break;
+    case '*':
+      total_val = total_val * indiv->genes[i].val;
+      break;
+    case '^':
+      pow(total_val, indiv->genes[i].val);
+      break;
+    default:
+      printf("Invalid input in file");
+    }
+  }
+  
+  fitness = abs(final - total_val);
+
+  indiv->fitness = fitness;
+
+  return fitness;
 }
