@@ -11,11 +11,12 @@ struct pair
 
 struct organism
 {
-  struct * pair[30];
+  struct pair genes[30];
   int size;
 };
 
 void genetic_algorithm(int start, int final, float time, struct pair * nodes[], int num_nodes);
+void create_population(struct organism * pop[], int pop_size, struct pair * nodes[], int num_nodes);
 
 int main(int argc, char * argv[])
 {
@@ -65,7 +66,7 @@ int main(int argc, char * argv[])
 
   if(strncmp("genetic", search_type, 10) == 0)
   {
-    //genetic_algorithm(start, final, time, nodes, i);
+    genetic_algorithm(start, final, time, nodes, i);
   }
 
   for(j = 0; j < i; j++)
@@ -76,5 +77,31 @@ int main(int argc, char * argv[])
 
 void genetic_algorithm(int start, int final, float time, struct pair * nodes[], int num_nodes)
 {
+  int population_size = 10;
+  struct organism * population[population_size];
+  
+  create_population(population, population_size, nodes, num_nodes);
+}
 
+void create_population(struct organism * pop[], int pop_size, struct pair * nodes[], int num_nodes)
+{
+  int i, j, org_size, op_num;
+  time_t t;
+
+  srand((unsigned) time(&t));
+  
+  for(i = 0; i < pop_size; i++)
+  {
+    struct organism * indiv = (struct organism*)malloc(sizeof(struct organism));
+    org_size =  1 + rand() % 30;
+    indiv->size = org_size;
+    
+    for(j = 0; j < org_size; j++)
+    {
+      op_num = rand() % num_nodes;
+      indiv->genes[j].op = nodes[op_num]->op;
+      indiv->genes[j].val = nodes[op_num]->val;
+    }
+    pop[i] = indiv;
+  }
 }
