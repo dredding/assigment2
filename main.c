@@ -77,10 +77,20 @@ int main(int argc, char * argv[])
 
 void genetic_algorithm(int start, int final, float time, struct pair * nodes[], int num_nodes)
 {
-  int population_size = 10;
+  int i, j, org_size, population_size = 10;
   struct organism * population[population_size];
   
   create_population(population, population_size, nodes, num_nodes);
+
+  for(i = 0; i < population_size; i++)
+  {
+    org_size = population[i]->size;
+    printf("organism: %d, size: %d\n", i, org_size);
+    for(j = 0; j < org_size; j++)
+    {
+      printf("gene: %d, op: %c, val: %f\n", j, population[i]->genes[j].op, population[i]->genes[j].val);
+    }
+  }
 }
 
 void create_population(struct organism * pop[], int pop_size, struct pair * nodes[], int num_nodes)
