@@ -9,6 +9,12 @@ struct pair
   float val;
 };
 
+struct organism
+{
+  struct * pair[30];
+  int size;
+};
+
 void genetic_algorithm(int start, int final, float time, struct pair * nodes[], int num_nodes);
 
 int main(int argc, char * argv[])
