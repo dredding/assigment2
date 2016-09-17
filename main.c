@@ -20,6 +20,7 @@ struct organism
 void genetic_algorithm(int start, int final, float time, struct pair * nodes[], int num_nodes, struct timeval time1);
 void create_population(struct organism * pop[], int pop_size, struct pair * nodes[], int num_nodes);
 double fitness_function(struct organism * indiv, int start, int final);
+void selection_function(struct organism * pop[], int pop_size);
 
 int main(int argc, char * argv[])
 {
@@ -110,6 +111,13 @@ void genetic_algorithm(int start, int final, float time, struct pair * nodes[], 
   }
 
   // partially reorder the population grab best results remove the worst
+  selection_function(population, population_size);
+  for(i = 0; i < population_size; i++)
+  {
+    printf("organism: %d fitness: %lf\n", i, population[i]->fitness);
+  }
+
+  
 }
 
 void create_population(struct organism * pop[], int pop_size, struct pair * nodes[], int num_nodes)
@@ -169,4 +177,43 @@ double fitness_function(struct organism * indiv, int start, int final)
   indiv->fitness = fitness;
 
   return fitness;
+}
+
+void selection_function(struct organism * pop[], int pop_size)
+{
+  int i, j, best, worst;
+  struct organism *tempb, *tempw;
+
+  tempb = (struct organism*)malloc(sizeof(struct organism));
+  tempw = (struct organism*)malloc(sizeof(struct organism));
+
+  for(i = 0; i < (pop_size / 10); i++)
+  {
+    best = i;
+    worst = (pop_size - 1) - i;
+  
+    for(j = i; j <  pop_size; j++)
+    {
+      if(pop[best]->fitness > pop[j]->fitness)
+      {
+	best = j;
+      }
+
+      if(pop[worst]->fitness < pop[j]->fitness)
+      {
+	worst = j;
+      }
+    }
+
+    tempb = pop[i];
+    pop[i] = pop[best];
+    pop[best] = tempb;
+
+    tempw = pop[(pop_size - 1) - i];
+    pop[(pop_size - 1) - i] = pop[worst];
+    pop[worst] = tempw;
+  }
+
+  //free(tempb);
+  //free(tempw);
 }
